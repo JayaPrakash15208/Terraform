@@ -102,13 +102,17 @@ resource "aws_security_group" "main_sg" {
 # --- Jenkins server instance ---
 resource "aws_instance" "jenkins_server" {
   ami                         = data.aws_ami.amazon_linux.id
-  instance_type               = var.instance_type
+  instance_type               = "t3.small"
   key_name                    = aws_key_pair.my_key.key_name
   vpc_security_group_ids      = [aws_security_group.jenkins_sg.id]
   associate_public_ip_address = true
 
-  user_data = file("${path.module}/install-jenkins-server.sh")
-
+  user_data = templatefile("${path.module}/install-main-server.sh.tpl", {
+  env_name    = "production"
+  flask_debug = "false"
+  port        = "5000"
+  secret_key  = var.flask_secret_key
+})
   root_block_device {
     volume_size           = 20
     volume_type           = "gp3"

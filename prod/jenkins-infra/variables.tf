@@ -14,3 +14,9 @@ variable "my_ip_cidr" {
   description = "Your IP address in CIDR form, used to restrict SSH/Jenkins UI access. Find yours at whatismyip.com and format as x.x.x.x/32"
   type        = string
 }
+
+variable "flask_secret_key" {
+  description = "Secret key for the Flask app"
+  type        = string
+  sensitive   = true
+}

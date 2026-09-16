@@ -13,6 +13,15 @@ sudo dnf install -y docker
 sudo systemctl enable --now docker
 sudo usermod -aG docker ec2-user
 #sudo dnf install -y docker-compose-plugin
+echo "=== Writing .env file for the Flask app ==="
+cat > /home/ec2-user/.env << 'ENVEOF'
+ENV_NAME=${env_name}
+FLASK_DEBUG=${flask_debug}
+PORT=${port}
+SECRET_KEY=${secret_key}
+ENVEOF
+chown ec2-user:ec2-user /home/ec2-user/.env
+chmod 600 /home/ec2-user/.env
 
 echo ""
 echo "================================================="
