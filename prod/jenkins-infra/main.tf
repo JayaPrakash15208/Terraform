@@ -107,12 +107,7 @@ resource "aws_instance" "jenkins_server" {
   vpc_security_group_ids      = [aws_security_group.jenkins_sg.id]
   associate_public_ip_address = true
 
-  user_data = templatefile("${path.module}/install-main-server.sh.tpl", {
-  env_name    = "production"
-  flask_debug = "false"
-  port        = "5000"
-  secret_key  = var.flask_secret_key
-})
+  user_data = file("${path.module}/install-jenkins-server.sh")
   root_block_device {
     volume_size           = 20
     volume_type           = "gp3"
@@ -132,7 +127,12 @@ resource "aws_instance" "main_server" {
   vpc_security_group_ids      = [aws_security_group.main_sg.id]
   associate_public_ip_address = true
 
-  user_data = file("${path.module}/install-main-server.sh")
+  user_data = templatefile("${path.module}/install-main-server.sh.tpl", {
+  env_name    = "production"
+  flask_debug = "false"
+  port        = "5000"
+  secret_key  = var.flask_secret_key
+})
 
   root_block_device {
     volume_size           = 15
